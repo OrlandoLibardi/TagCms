@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use OrlandoLibardi\PageCms\app\Page;
+
 use OrlandoLibardi\OlCms\AdminCms\app\Admin;
 
 class TagTableSeeder extends Seeder

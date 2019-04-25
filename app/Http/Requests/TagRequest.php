@@ -1,6 +1,6 @@
 <?php
 
-namespace OrlandoLibardi\MenuCms\app\Http\Requests;
+namespace OrlandoLibardi\TagCms\app\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,13 +27,12 @@ class TagRequest extends FormRequest
         switch($this->method()){
             case 'POST':
                 $rules = [
-                    'tag_name'  => 'required|string|max:255',
-                    'tag_value' => 'required'
+                    'tags.*'  => 'required|string|max:255',
                 ];   
             break;
             case 'DELETE':
                 $rules = [
-                    'tag_name' => 'required' 
+                    'id.*' => 'required' 
                 ];
             break;
             default:

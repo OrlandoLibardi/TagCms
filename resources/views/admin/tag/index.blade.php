@@ -2,20 +2,17 @@
 <!-- breadcrumbs -->
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-9">
-        <h2>Menus</h2>
+        <h2>Tags</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="/admin">Paínel de controle</a>
             </li>
-            <li class="active">Menus </li>
+            <li class="active">Tags </li>
         </ol>
     </div>
     <div class="col-md-3 padding-btn-header text-right">
-        @can('create')
-        <a href="{{ Route('menu.create') }}" class="btn btn-success btn-sm">Novo Menu</a>
-        @else
-        <a href="javascript:;" class="btn btn-success btn-sm disabled alert-action">Novo Menu</a>
-        @endcan
+        <a href="javascript:saveTags();" class="btn btn-primary btn-sm salvar">Salvar</a>
+        <a href="{{ Route('tags.index') }}" class="btn btn-warning btn-sm">Cancelar</a>
     </div>
 </div>
 
@@ -25,80 +22,46 @@
     <div class="col-md-8">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>Menus cadastradas</h5>
+                <h5>Tags cadastradas</h5>
                 <div class="ibox-tools">
-                    <a class="collapse-link"> <i class="fa fa-chevron-up"></i>  </a>
+                    <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a>
                 </div>
             </div>
             <div class="ibox-content">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-bordered" id="results">
-                            <thead>
-                                <tr>
-                                    <td width="10"><input type="checkbox" name="excludeAll"></td>
-                                    <td>Name</td>
-                                    <td width="200">Template</td>
-                                    <td width="300">Usage</td>
-                                    <td width="150">Criado em:</td>
-                                    <td width="150">Atualizado em:</td>
-                                    <td width="50">Administrar</td>
-                                    <td width="50">Editar</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @can('edit')
-                                @foreach ($menus as $menu)
-                                    <tr>
-                                        <td><input type="checkbox" name="exclude" value="{{ $menu->id }}"> </td>
-                                        <td>{{ $menu->name }}</td>
-                                        <td>{{ $menu->template }}</td>
-                                        <td>&#123;&#123; OlCmsMenu::show('{{$menu->alias}}') &#125;&#125; 	 	</td>
-                                        <td>{{ $menu->created_at }}</td>
-                                        <td>{{ $menu->updated_at }}</td>
-                                        <td width="50" class="text-center">
-                                            <a href="{{ Route('menu-items.show', ['alias' => $menu->alias]) }}" class="btn btn-sm btn-flat btn-info">
-                                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
-                                        <td class="text-center">
-                                            @include('admin.includes.btn_edit', ['route' => route('menu.edit', ['id' => $menu->id])])
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                @else
-                                @foreach ($menus as $menu)
-                                    <tr>
-                                        <td><input type="checkbox" name="exclude" value="{{ $menu->id }}"> </td>
-                                        <td>{{ $menu->name }}</td>
-                                        <td>{{ $menu->template }}</td>
-                                        <td></td>
-                                        <td>{{ $menu->created_at }}</td>
-                                        <td>{{ $menu->updated_at }}</td>
-                                        <td width="50" class="text-center">
-                                        <a href="javascript:;" class="btn btn-sm btn-flat btn-info">
-                                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                        </a>
-                                        </td>
-                                        <td class="text-center">
-                                            @include('admin.includes.btn_edit_disabled', ['route' => route('menu.edit', ['id' => $menu->id])])
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                @endcan
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <table class="table table-bordered" id="results">
+                    <thead>
+                        <tr>
+                            <td width="10"><input type="checkbox" name="excludeAll"></td>
+                            <td width="200">Nome</td>
+                            <td>Valor</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $i = 0; @endphp
+                        @foreach($tags as $key=>$value)
+                        <tr>
+                            <td><input type="checkbox" name="exclude" value="{{ $key }}" data-id="{{ $i }}"> </td>
+                            <td><input type="text" name="tag_name" data-id="{{ $i }}" value="{{ $key }}"
+                                    class="form-control"></td>
+                            <td><input type="text" name="tag_value" data-id="{{ $i }}" value="{{ $value }}"
+                                    class="form-control"></td>
+                        </tr>
+                        @php $i++ @endphp
+                        @endforeach
+                    </tbody>
+                </table>
+                <a href="javascript:newLine();" class="btn btn-sm btn-flat btn-info pull-right">Adicionar nova Tag</a>
             </div>
         </div>
 
 
     </div>
 </div>
-<input name="route_create" value="{{ Route('menu.create') }}" type="hidden">
-<input name="route_delete" value="/admin/menu/destroy/" type="hidden">
-<input name="route_status" value="/admin/menu/status/" type="hidden">
+{!! Form::open(['route' => 'tags.store', 'method' => 'POST', 'id' => 'form-tags']) !!}
+{!! Form::hidden('tags', null) !!}
+{!! Form::close() !!}
+<input name="route_create" value="{{ Route('tags.create') }}" type="hidden">
+<input name="route_delete" value="/admin/tags/destroy/" type="hidden">
 @endsection
 @push('style')
 <!-- Adicional Styles -->
@@ -106,53 +69,82 @@
 @endpush
 @push('script')
 <!-- Adicional Scripts -->
+<script src="{{ asset('assets/theme-admin/js/main.js') }}"></script>
 <script src="{{ asset('assets/theme-admin/js/plugins/OLForm/OLForm.jquery.js') }}"></script>
 <!-- exclude -->
 <script src="{{ asset('assets/theme-admin/js/plugins/OLForm/OLExclude.jquery.js') }}"></script>
 <script>
-$("#templates").OLForm({listErrorPosition: 'after', listErrorPositionBlock: '.modal-header', btn : true}, locationIn);
-function locationIn(a){ window.location = $("input[name=route_create]").val() }
+$("#form-tags").OLForm({
+    listErrorPosition: 'after',
+    listErrorPositionBlock: '.modal-header',
+    btn: true
+});
 /*Exclude*/
-$("#results").OLExclude({'action' : $("input[name=route_delete]").val(), 'inputCheckName' : 'exclude', 'inputCheckAll' : 'excludeAll'});
-
-$(document).on("click", "a.btn-status:not(.disabled)", function(){
-    var $this = $(this),
-    _url  = $("input[name=route_status]").val(),
-    _id = $this.attr("data-id"),
-    _status = $this.attr("data-status");
-    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $("meta[name=csrf-token]").attr("content") } });
-    $.ajax({
-        data: {'id' : _id, 'status' : _status},
-        method: 'PUT',
-        url: _url,
-        beforeSend: function() {
-            $this.addClass("disabled");
-        },
-        success: function(exr) {
-            toggleStatus($this, _status);
-        },
-        error: function(exr, sender) {
-            console.log(exr);
-
-        },
-        complete: function() {
-            //$this.removeClass("disabled");
-        },
-    });
+$("#results").OLExclude({
+    'action': $("input[name=route_delete]").val(),
+    'inputCheckName': 'exclude',
+    'inputCheckAll': 'excludeAll'
 });
 
-function toggleStatus($this, status){
-    if(status == 1){
-        $this.attr("class", "btn btn-default btn-sm btn-status")
-             .attr("data-status", 0)
-             .attr("title", "Colocar Online?");
-    }else{
-        $this.attr("class", "btn btn-primary btn-sm btn-status")
-             .attr("data-status", 1)
-             .attr("title", "Colocar Offline?");
-    }
+
+function saveTags()
+{
+    var tags = {};
+    $("#results").find('input[name=tag_name]').each(function() {
+        tags[$(this).val()] = $("input[name=tag_value][data-id="+$(this).attr("data-id")+"]").val();
+    });
+    $("input[name=tags]").val(JSON.stringify(tags));
+    $("#form-tags").submit();
 }
 
+/* Mascara */
+
+$(document).on("change", "input[name=tag_name]", function(){
+    var slug = slugar($(this).val());
+    $(this).val(slug);
+    $("input[name=exclude][data-id="+$(this).attr("data-id")+"]").val(slug);
+});
+/* Nova linha */
+function newLine() 
+{
+    var max_line = 0;
+
+    $("#results").find('input[type=checkbox]').each(function() {
+        if ($(this).attr('data-id') > max_line) max_line = $(this).attr('data-id');
+    });
+
+    max_line++;
+
+    var obj = '<tr>';
+    obj += '<td><input type="checkbox" name="exclude" value="" data-id="' + max_line + '"> </td>';
+    obj += '<td><input type="text" name="tag_name" data-id="' + max_line + '" value="" class="form-control"></td>';
+    obj += '<td><input type="text" name="tag_value" data-id="' + max_line + '" value="" class="form-control"></td>';
+    obj += '</tr>';
+
+    $("#results tbody").append(obj);
+}
+function slugar(v)
+{
+    return v.toString()
+            .toLowerCase()
+            .replace(/[àÀáÁâÂãäÄÅåª]+/g, 'a')
+            .replace(/[èÈéÉêÊëË]+/g, 'e')
+            .replace(/[ìÌíÍîÎïÏ]+/g, 'i')
+            .replace(/[òÒóÓôÔõÕöÖº]+/g, 'o')
+            .replace(/[ùÙúÚûÛüÜ]+/g, 'u')
+            .replace(/[ýÝÿŸ]+/g, 'y')
+            .replace(/[ñÑ]+/g, 'n')
+            .replace(/[çÇ]+/g, 'c')
+            .replace(/[ß]+/g, 'ss')
+            .replace(/[Ææ]+/g, 'ae')
+            .replace(/[Øøœ]+/g, 'oe')
+            .replace(/[%]+/g, 'pct')
+            .replace(/\s+/g, '_')
+            .replace(/[^\w\-]+/g, '')
+            //.replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+}
 </script>
 
 @endpush
