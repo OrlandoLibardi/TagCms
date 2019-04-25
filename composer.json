@@ -1,0 +1,28 @@
+{
+    "name": "orlandolibardi/tagscms",
+    "description": "Modulo para criar e editar tags de translate via páinel administrativo",
+    "type": "module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Orlando Libardi",
+            "email": "orlando.libardi@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "orlandolibardi/admincms": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "OrlandoLibardi\\TagCms\\": "./"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OrlandoLibardi\\TagCms\\app\\Providers\\OlCmsTagServiceProvider"
+            ]
+        }
+    }
+}
